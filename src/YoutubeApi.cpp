@@ -155,8 +155,7 @@ bool YoutubeApi::getChannelStatistics(String channelId){
 	//}
 
 	//return false;
-
-
+     // End of modification by InterlinkKnight
 }
 
 void YoutubeApi::closeClient() {
