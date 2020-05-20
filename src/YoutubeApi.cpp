@@ -97,6 +97,9 @@ bool YoutubeApi::getChannelStatistics(String channelId){
 	{
 		response.remove(0, firstJsonChar);
 	}	
+	
+	// Old:
+/*
 	DynamicJsonBuffer jsonBuffer;
 	JsonObject& root = jsonBuffer.parseObject(response);
 	if(root.success()) {
@@ -118,6 +121,42 @@ bool YoutubeApi::getChannelStatistics(String channelId){
 	}
 
 	return false;
+*/
+
+	// New - InterlinkKnight:
+	StaticJsonDocument<500> doc;  // Create a json document
+	deserializeJson(doc, response);  // Deserialize the string so we can get individual values.
+	/* The string that we received is full with stuff that we don't need. To extract the few values that we want we need to separate each value with this. The result is that later we can call the object that we want to extract.*/
+
+
+	//if(root.success()) {
+		if (doc.containsKey("items"))
+		{
+
+			long subscriberCount = doc["items"][0]["statistics"]["subscriberCount"];
+
+			long viewCount = doc["items"][0]["statistics"]["viewCount"];
+
+			long commentCount = doc["items"][0]["statistics"]["commentCount"];
+
+			long hiddenSubscriberCount = doc["items"][0]["statistics"]["hiddenSubscriberCount"];
+
+			long videoCount = doc["items"][0]["statistics"]["videoCount"];
+
+
+			channelStats.viewCount = viewCount;
+			channelStats.subscriberCount = subscriberCount;
+			channelStats.commentCount = commentCount;
+			channelStats.hiddenSubscriberCount = hiddenSubscriberCount;
+			channelStats.videoCount = videoCount;
+
+			return true;
+		}
+	//}
+
+	//return false;
+
+
 }
 
 void YoutubeApi::closeClient() {
